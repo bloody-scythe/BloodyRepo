@@ -14,7 +14,7 @@ for package in PACKAGELIST:
     # Add PKGBUILD to git
     os.system("git add PKGBUILD")
     # Make package
-    os.system('makepkg')
+    os.system('makepkg --sign')
     for file in os.listdir():
         if '.tar.zst' in file:
             # Copy package file to repo
