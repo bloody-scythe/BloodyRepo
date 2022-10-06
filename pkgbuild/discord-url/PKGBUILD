@@ -1,0 +1,46 @@
+# Maintainer: Scythe <bloodyscythe404@gmail.com>
+
+pkgname=discord-url
+_pkgname=discord
+url="https://discord.com/login"
+pkgdesc='Discord webclient using electron'
+pkgver=1
+pkgrel=1
+pkgdesc=''
+arch=("any")
+license=("")
+source=()
+md5sums=()
+
+depends=("electron")
+makedepends=('imagemagick' 'curl')
+
+prepare() {
+    curl "https://discord.com/assets/ec2c34cadd4b5f4594415127380a85e6.ico" --output "$srcdir/favicon.ico"
+    convert $srcdir/favicon.ico $srcdir/icon.png
+}
+
+build() {
+
+    # Create launcher shell script
+cat > $srcdir/launch.sh << EOF
+#!/bin/sh
+exec electron "$url"
+EOF
+
+# Create Desktop file
+cat > $srcdir/$_pkgname.desktop <<EOF
+[Desktop Entry]
+Name=$_pkgname
+Exec=/usr/bin/$_pkgname
+Icon=$_pkgname
+Type=Application
+Categories=Network
+EOF
+
+}
+package() {
+    install -Dm755 $srcdir/launch.sh $pkgdir/usr/bin/$_pkgname
+    install -Dm644 $srcdir/$_pkgname.desktop $pkgdir/usr/share/applications/$_pkgname.desktop
+    install -Dm644 $srcdir/icon-0.png $pkgdir/usr/share/pixmaps/$_pkgname.png
+}
