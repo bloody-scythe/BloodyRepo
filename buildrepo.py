@@ -6,11 +6,17 @@ PKGDIR = os.path.join(HERE, "pkgbuild")
 PACKAGELIST = os.listdir(PKGDIR)
 REPO = os.path.join(HERE, 'x86_64')
 
-# Make packages
+# Make packages and copy to repo
 for package in PACKAGELIST:
     os.chdir(os.path.join(PKGDIR, package))
+    # Add PKGBUILD to git
+    os.system("git add PKGBUILD")
+    # Make package
     os.system('makepkg')
     for file in os.listdir():
         if '.tar.zst' in file:
-            shutil.copyfile(file, os.path.join(REPO,file))
+            # Copy package file to repo
+            newfile = shutil.copyfile(file, os.path.join(REPO,file))
+            # Add new package to git
+            os.system('git add ' + newfile)
 
