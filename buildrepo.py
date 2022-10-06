@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import io,sys,os,shutil
+from shutil import copyfile
 
 HERE = os.path.dirname(__file__)
 PKGDIR = os.path.join(HERE, "pkgbuild")
@@ -22,4 +23,15 @@ for package in PACKAGELIST:
             os.system('repo-add ' + REPODB + " " + newfile)
             # Add new package to git
             os.system('git add ' + newfile)
+
+# Cleanup repo symlinks
+
+os.chdir(REPO)
+# Remove symlinks
+os.remove("bloody-repo.db")
+os.remove("bloody-repo.files")
+# Rename database
+os.rename("bloody-repo.db.tar.gz", "bloody-repo.db")
+os.rename("bloody-repo.files.tar.gz", "bloody-repo.files")
+
 
